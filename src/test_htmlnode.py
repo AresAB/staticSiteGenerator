@@ -14,6 +14,11 @@ class TestHTMLNode(unittest.TestCase):
 		node3 = HTMLNode("p", "This is a HTML node", [node], {"href": "https://ligma.bll", "href": "http://slugma.bll"})
 		self.assertNotEqual(node, node2)
 		self.assertNotEqual(node2, node3)
+	
+	def test_eq(self):
+		node = HTMLNode("p", "This is a HTML node")
+		node2 = HTMLNode("p", "This is a HTML node")
+		self.assertEqual(node, node2)
 
 if __name__ == "__main__":
     unittest.main()
