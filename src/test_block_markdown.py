@@ -35,15 +35,23 @@ class TestBlockMarkdown(unittest.TestCase):
         text21 = "- This is an unordered list"
         text22 = "- This is an unordered list\n- This is another"
         text23 = "- This is an unordered list\n- This is another\n- This is yet another"
-        text24 = "- This is a paragraph\nThis is a another"
+        text24 = "- This is a paragraph\nThis is another"
         text25 = "- This is a paragraph\nThis is another\n- This is yet another"
-        text26 = "- This is a paragraph\n-This is another\nThis is yet another"
+        text26 = "- This is a paragraph\n-This is another\n- This is yet another"
         text27 = "* This is an unordered list"
         text28 = "* This is an unordered list\n* This is another"
         text29 = "* This is an unordered list\n* This is another\n- This is yet another"
-        text30 = "* This is a paragraph\nThis is a another"
+        text30 = "* This is a paragraph\nThis is another"
         text31 = "* This is a paragraph\nThis is another\n* This is yet another"
-        text32 = "* This is a paragraph\n*This is another\nThis is yet another"
+        text32 = "* This is a paragraph\n*This is another\n* This is yet another"
+        text33 = "1. This is an ordered list"
+        text34 = "1. This is an ordered list\n2. This is another"
+        text35 = "1. This is an ordered list\n2. This is another\n3. This is yet another"
+        text36 = "1. This is a paragraph\nThis is another"
+        text37 = "1. This is a paragraph\nThis is another\n3. This is yet another"
+        text38 = "1. This is a paragraph\n2. This is another\nThis is yet another"
+        text39 = "1. This is a paragraph\n2.This is another\n3. This is yet another"
+        text40 = "2. This is a paragraph\n3. This is another\n4. This is yet another"
         self.assertEqual(block_to_block_type(text1), "paragraph")
         self.assertEqual(block_to_block_type(text2), "paragraph")
         self.assertEqual(block_to_block_type(text3), "paragraph")
@@ -76,6 +84,14 @@ class TestBlockMarkdown(unittest.TestCase):
         self.assertEqual(block_to_block_type(text30), "paragraph")
         self.assertEqual(block_to_block_type(text31), "paragraph")
         self.assertEqual(block_to_block_type(text32), "paragraph")
+        self.assertEqual(block_to_block_type(text33), "ordered list")
+        self.assertEqual(block_to_block_type(text34), "ordered list")
+        self.assertEqual(block_to_block_type(text35), "ordered list")
+        self.assertEqual(block_to_block_type(text36), "paragraph")
+        self.assertEqual(block_to_block_type(text37), "paragraph")
+        self.assertEqual(block_to_block_type(text38), "paragraph")
+        self.assertEqual(block_to_block_type(text39), "paragraph")
+        self.assertEqual(block_to_block_type(text40), "paragraph")
 
 if __name__ == "__main__":
     unittest.main()

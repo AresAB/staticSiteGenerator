@@ -20,11 +20,13 @@ def block_to_block_type(input_block):
     block_list = block.split("\n")
     is_quote = True
     is_unordered_list = True
-    #is_ordered_list = True
-    for line in block_list:
-        if line[:1] != ">": is_quote = False
-        if line[:2] != "* " or line[:2] != "- ": is_unordered_list = False
+    is_ordered_list = True
+    for i in range(0, len(block_list)):
+        list = block_list[i]
+        if list[:1] != ">": is_quote = False
+        if list[:2] != "* " and list[:2] != "- ": is_unordered_list = False
+        if list[:3] != f"{i + 1}. ": is_ordered_list = False
     if is_quote: return block_type_quote
-    if is_unordered_list: return block_type_quote
-
+    if is_unordered_list: return block_type_unordered_list
+    if is_ordered_list: return block_type_ordered_list
     return block_type_paragraph
