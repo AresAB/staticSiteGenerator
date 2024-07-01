@@ -1,6 +1,16 @@
 import unittest
 
-from block_markdown import markdown_to_blocks, block_to_block_type
+from block_markdown import (
+    markdown_to_blocks, 
+    block_to_block_type, 
+    block_to_html_paragraph, 
+    block_to_html_heading, 
+    block_to_html_code, 
+    block_to_html_quote, 
+    block_to_html_unordered_list, 
+    block_to_html_ordered_list
+)
+from htmlnode import ParentNode, LeafNode
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -10,6 +20,52 @@ class TestBlockMarkdown(unittest.TestCase):
         self.assertEqual(markdown_to_blocks(text1), ["Paragraph 1", "Paragraph 2", "Paragraph 3"])
         self.assertEqual(markdown_to_blocks(text2), ["This is a paragraph", "This is another", "This is even more ", " And this is the most"])
         self.assertEqual(markdown_to_blocks(text3), markdown_to_blocks(text1))
+
+    def test_block_to_html_paragraph(self):
+        text1 = "This is **bolded**"
+        text2 = "This is `code`"
+        text3 = "She **bolded** on my [link](https://dragma.bll) till I *italic*"
+        self.assertEqual(block_to_html_paragraph(text1), ParentNode("p", [LeafNode(None, "This is "), LeafNode("b", "bolded")]))
+        self.assertEqual(block_to_html_paragraph(text2), ParentNode("p", [LeafNode(None, "This is "), LeafNode("code", "code")]))
+        self.assertEqual(block_to_html_paragraph(text3), ParentNode("p", [LeafNode(None, "She "), LeafNode("b", "bolded"), LeafNode(None, " on my "), LeafNode("a", "link", {"href": "https://dragma.bll"}), LeafNode(None, " till I "), LeafNode("i", "italic")]))
+
+    def test_block_to_html_heading(self):
+        text1 = "# This is a heading1"
+        text2 = "## This is a heading2"
+        text3 = "### This is a heading3"
+        text4 = "#### This is a heading4"
+        text5 = "##### This is a heading5"
+        text6 = "###### This is a heading6"
+        text7 = "#### This is **bolded**"
+        text8 = "## This is a **bolded** *italic* [link](https://gulpin.dyz)"
+        self.assertEqual(block_to_html_heading(text1), ParentNode("h1", [LeafNode(None, "This is a heading1")]))
+        self.assertEqual(block_to_html_heading(text2), ParentNode("h2", [LeafNode(None, "This is a heading2")]))
+        self.assertEqual(block_to_html_heading(text3), ParentNode("h3", [LeafNode(None, "This is a heading3")]))
+        self.assertEqual(block_to_html_heading(text4), ParentNode("h4", [LeafNode(None, "This is a heading4")]))
+        self.assertEqual(block_to_html_heading(text5), ParentNode("h5", [LeafNode(None, "This is a heading5")]))
+        self.assertEqual(block_to_html_heading(text6), ParentNode("h6", [LeafNode(None, "This is a heading6")]))
+        self.assertEqual(block_to_html_heading(text7), ParentNode("h4", [LeafNode(None, "This is "), LeafNode("b", "bolded")]))
+        self.assertEqual(block_to_html_heading(text8), ParentNode("h2", [LeafNode(None, "This is a "), LeafNode("b", "bolded"), LeafNode(None, " "), LeafNode("i", "italic"), LeafNode(None, " "), LeafNode("a", "link", {"href": "https://gulpin.dyz"})]))
+
+    def test_block_to_html_code(self):
+        text1 = "```This is a code block```"
+        text2 = "```This is a `code` block```"
+        text3 = "```This is a **bolded** *italic* [link](https://gulpin.dyz)```"
+        self.assertEqual(block_to_html_code(text1), ParentNode("pre", [ParentNode("code", [LeafNode(None, "This is a code block")])]))
+        self.assertEqual(block_to_html_code(text2), ParentNode("pre", [ParentNode("code", [LeafNode(None, "This is a "), LeafNode("code", "code"), LeafNode(None, " block")])]))
+        self.assertEqual(block_to_html_code(text3).to_html(), ParentNode("pre", [ParentNode("code", [LeafNode(None, "This is a "), LeafNode("b", "bolded"), LeafNode(None, " "), LeafNode("i", "italic"), LeafNode(None, " "), LeafNode("a", "link", {"href": "https://gulpin.dyz"})])]).to_html())
+
+    def test_block_to_html_quote(self):
+        text1 = ">This is a quote\n>w/ not 1, not 2,\n>but 3 whole lines"
+        text2 = ">This is a quote\n>w/ a `code` inline\n>in the middle"
+        text3 = ">This is a **bold**\n>w/ an *italic*\n>and a [link](https://gulpin.dyz)"
+        self.assertEqual(block_to_html_quote(text1), ParentNode("blockquote", [LeafNode(None, "This is a quote\nw/ not 1, not 2,\nbut 3 whole lines")]))
+        self.assertEqual(block_to_html_quote(text2), ParentNode("blockquote", [LeafNode(None, "This is a quote\nw/ a "), LeafNode("code", "code"), LeafNode(None, " inline\nin the middle")]))
+        self.assertEqual(block_to_html_quote(text3), ParentNode("blockquote", [LeafNode(None, "This is a "), LeafNode("b", "bold"), LeafNode(None, "\nw/ an "), LeafNode("i", "italic"), LeafNode(None, "\nand a "), LeafNode("a", "link", {"href": "https://gulpin.dyz"})]))
+
+    def test_block_to_html_unordered_list(self):
+        text1 = "* This is a list\n- that has\n* 3 lines"
+        text2 = ""
 
     def test_block_to_block_type(self):
         text1 = "This is a paragraph"

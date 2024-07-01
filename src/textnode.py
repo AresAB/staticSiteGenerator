@@ -30,3 +30,6 @@ def textNode_to_HTMLNode(node):
 	if node.text_type == text_type_link: return LeafNode("a", node.text, {"href": node.url})
 	if node.text_type == text_type_image: return LeafNode("img", "", {"src": node.url, "alt": node.text})
 	raise Exception(f"Invalid textNode: No HTML tag equivalent for \'{node.text_type}\'")
+
+def textNodes_to_HTMLNodes(nodes):
+	return list(map(lambda x: textNode_to_HTMLNode(x), nodes))
