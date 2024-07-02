@@ -61,3 +61,27 @@ def block_to_html_ordered_list(block):
     for line in split_block:
         list_components.append(ParentNode("li", textNodes_to_HTMLNodes(text_to_textnodes(line[3:]))))
     return ParentNode("ol", list_components)
+
+def markdown_to_htmlnode(text):
+    blocks = markdown_to_blocks(text)
+    parentNodes = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        if block_type == block_type_paragraph:
+            parentNodes.append(block_to_html_paragraph(block))
+            continue
+        if block_type == block_type_heading:
+            parentNodes.append(block_to_html_heading(block))
+            continue
+        if block_type == block_type_code:
+            parentNodes.append(block_to_html_code(block))
+            continue
+        if block_type == block_type_quote:
+            parentNodes.append(block_to_html_quote(block))
+            continue
+        if block_type == block_type_unordered_list:
+            parentNodes.append(block_to_html_unordered_list(block))
+            continue
+        if block_type == block_type_ordered_list:
+            parentNodes.append(block_to_html_ordered_list(block))
+    return ParentNode("div", parentNodes)
