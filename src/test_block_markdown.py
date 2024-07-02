@@ -65,7 +65,20 @@ class TestBlockMarkdown(unittest.TestCase):
 
     def test_block_to_html_unordered_list(self):
         text1 = "* This is a list\n- that has\n* 3 lines"
-        text2 = ""
+        text2 = "- This is a list\n* with some `code`\n* in it"
+        text3 = "* This is a **bolded** and `coded` list\n* that has *italics*\n- and a [link](https://gulpin.dyz)"
+        self.assertEqual(block_to_html_unordered_list(text1), ParentNode("ul", [ParentNode("li", [LeafNode(None, "This is a list")]), ParentNode("li", [LeafNode(None, "that has")]), ParentNode("li", [LeafNode(None, "3 lines")])]))
+        self.assertEqual(block_to_html_unordered_list(text2), ParentNode("ul", [ParentNode("li", [LeafNode(None, "This is a list")]), ParentNode("li", [LeafNode(None, "with some "), LeafNode("code", "code")]), ParentNode("li", [LeafNode(None, "in it")])]))
+        self.assertEqual(block_to_html_unordered_list(text3), ParentNode("ul", [ParentNode("li", [LeafNode(None, "This is a "), LeafNode("b", "bolded"), LeafNode(None, " and "), LeafNode("code", "coded"), LeafNode(None, " list")]), ParentNode("li", [LeafNode(None, "that has "), LeafNode("i", "italics")]), ParentNode("li", [LeafNode(None, "and a "), LeafNode("a", "link", {"href": "https://gulpin.dyz"})])]))
+
+    def test_block_to_html_ordered_list(self):
+        text1 = "1. This is a list\n2. that has\n3. 3 lines"
+        text2 = "1. This is a list\n2. with some `code`\n3. in it"
+        text3 = "1. This is a **bolded** and `coded` list\n2. that has *italics*\n3. and a [link](https://gulpin.dyz)"
+        self.assertEqual(block_to_html_ordered_list(text1), ParentNode("ol", [ParentNode("li", [LeafNode(None, "This is a list")]), ParentNode("li", [LeafNode(None, "that has")]), ParentNode("li", [LeafNode(None, "3 lines")])]))
+        self.assertEqual(block_to_html_ordered_list(text2), ParentNode("ol", [ParentNode("li", [LeafNode(None, "This is a list")]), ParentNode("li", [LeafNode(None, "with some "), LeafNode("code", "code")]), ParentNode("li", [LeafNode(None, "in it")])]))
+        self.assertEqual(block_to_html_ordered_list(text3), ParentNode("ol", [ParentNode("li", [LeafNode(None, "This is a "), LeafNode("b", "bolded"), LeafNode(None, " and "), LeafNode("code", "coded"), LeafNode(None, " list")]), ParentNode("li", [LeafNode(None, "that has "), LeafNode("i", "italics")]), ParentNode("li", [LeafNode(None, "and a "), LeafNode("a", "link", {"href": "https://gulpin.dyz"})])]))
+
 
     def test_block_to_block_type(self):
         text1 = "This is a paragraph"
