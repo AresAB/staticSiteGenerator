@@ -11,7 +11,7 @@ block_type_ordered_list = "ordered list"
 
 # this function seperates text into blocks, with the delimiter being a whitespace line. Might be worth messing with different delimiters for different markdown standards
 def markdown_to_blocks(markdown):
-    return list(filter(lambda x: x != "", markdown.split("\n\n")))
+    return list(filter(lambda x: x.strip() != "", markdown.split("\n\n")))
 
 def block_to_block_type(input_block):
     block = input_block.strip()
