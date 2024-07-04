@@ -13,7 +13,11 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path) as f: template_text = f.read()
     raw_html_title = extract_heading(from_text)
     raw_html = markdown_to_htmlnode(from_text).to_html()
-    html_page = template_text.replace("\{\{ Title \}\}", raw_html_title).replace("\{\{ Content \}\}", raw_html)
-    if os.path.isdir(dest_path) == False: os.makedirs(dest_path)
-    with open(f"{dest_path}/index.html") as f: f.write(html_page)
-    print(f"All complete, file \'index.html\' created in {dest_path}")
+    html_page = template_text.replace(r"{{ Title }}", raw_html_title).replace(r"{{ Content }}", raw_html)
+
+    dest_path_split = dest_path.split("/")
+    dest_path_dir = "/".join(dest_path_split[:-1])
+
+    if os.path.isdir(dest_path_dir) == False: os.makedirs(dest_path_dir)
+    with open(dest_path, "w") as f: f.write(html_page)
+    print(f"All complete, file '{dest_path}' created")
